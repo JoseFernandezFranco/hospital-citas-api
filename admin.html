@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de citas médicas</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    section { margin-bottom: 40px; border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
+    form { margin-bottom: 10px; }
+    label { display: inline-block; width: 140px; }
+    input { margin-bottom: 5px; }
+    button { margin-top: 5px; }
+    pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h1>Gestión de citas médicas</h1>
+  <p>Base API URL: <input type="text" id="baseUrl" value="http://localhost:3000/api" style="width:300px;"></p>
+
+  <section id="doctores">
+    <h2>Doctores</h2>
+    <button onclick="listarDoctores()">Listar doctores</button>
+    <pre id="doctoresOutput"></pre>
+    <h3>Crear doctor</h3>
+    <form id="formCrearDoctor">
+      <label>Nombre:</label><input type="text" name="nombre" required><br>
+      <label>Especialidad:</label><input type="text" name="especialidad" required><br>
+      <label>Sala consulta:</label><input type="text" name="sala_consulta"><br>
+      <button type="submit">Crear doctor</button>
+    </form>
+    <pre id="doctorCreateOutput"></pre>
+  </section>
+
+  <section id="pacientes">
+    <h2>Pacientes</h2>
+    <button onclick="listarPacientes()">Listar pacientes</button>
+    <pre id="pacientesOutput"></pre>
+    <h3>Crear paciente</h3>
+    <form id="formCrearPaciente">
+      <label>Nombre:</label><input type="text" name="nombre" required><br>
+      <label>DNI:</label><input type="text" name="dni" required><br>
+      <label>Contacto:</label><input type="text" name="contacto"><br>
+      <label>Número sanitario:</label><input type="text" name="numero_sanitario"><br>
+      <button type="submit">Crear paciente</button>
+    </form>
+    <pre id="pacienteCreateOutput"></pre>
+  </section>
+
+  <section id="citas">
+    <h2>Citas</h2>
+    <button onclick="listarCitas()">Listar citas</button>
+    <pre id="citasOutput"></pre>
+    <h3>Crear cita</h3>
+    <form id="formCrearCita">
+      <label>ID Doctor:</label><input type="number" name="id_doctor" required><br>
+      <label>ID Paciente:</label><input type="number" name="id_paciente" required><br>
+      <label>Fecha (YYYY-MM-DD):</label><input type="date" name="fecha" required><br>
+      <label>Hora (HH:MM):</label><input type="time" name="hora" required><br>
+      <button type="submit">Crear cita</button>
+    </form>
+    <pre id="citaCreateOutput"></pre>
+  </section>
+
+<script>
+function getBaseUrl() {
+  return document.getElementById('baseUrl').value.trim();
+}
+
+async function fetchAndDisplay(url, options, outputElementId) {
+  try {
+    const res = await fetch(url, options);
+    const data = await res.json();
+    document.getElementById(outputElementId).textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    document.getElementById(outputElementId).textContent = 'Error: ' + err;
+  }
+}
+
+function listarDoctores() {
+  const url = getBaseUrl() + '/doctores';
+  fetchAndDisplay(url, { method: 'GET' }, 'doctoresOutput');
+}
+
+function listarPacientes() {
+  const url = getBaseUrl() + '/pacientes';
+  fetchAndDisplay(url, { method: 'GET' }, 'pacientesOutput');
+}
+
+function listarCitas() {
+  const url = getBaseUrl() + '/citas';
+  fetchAndDisplay(url, { method: 'GET' }, 'citasOutput');
+}
+
+document.getElementById('formCrearDoctor').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const body = {};
+  formData.forEach((value, key) => {
+    body[key] = value;
+  });
+  const url = getBaseUrl() + '/doctores';
+  fetchAndDisplay(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }, 'doctorCreateOutput');
+});
+
+document.getElementById('formCrearPaciente').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const body = {};
+  formData.forEach((value, key) => {
+    body[key] = value;
+  });
+  const url = getBaseUrl() + '/pacientes';
+  fetchAndDisplay(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }, 'pacienteCreateOutput');
+});
+
+document.getElementById('formCrearCita').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const body = {};
+  formData.forEach((value, key) => {
+    body[key] = value;
+  });
+  const url = getBaseUrl() + '/citas';
+  fetchAndDisplay(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }, 'citaCreateOutput');
+});
+</script>
+</body>
+</html>
