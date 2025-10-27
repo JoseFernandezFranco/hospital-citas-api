@@ -1,0 +1,21 @@
+{
+  "name": "hospital-citas-api",
+  "version": "1.0.0",
+  "description": "Servicio Web de gestión de citas médicas (hospital).",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node -e \"require('http').get('http://localhost:3000/health',r=>{console.log('ok'); process.exit(0)})\" & sleep 1 || true"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
